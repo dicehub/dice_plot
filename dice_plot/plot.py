@@ -5,11 +5,12 @@ from io import BytesIO
 import lz4
 from tempfile import NamedTemporaryFile
 import mmap
+from dice_tools.helpers.xview import View
 
-class Plot(DICEObject):
+class Plot(View):
 
     def __init__(self, size_x=1, size_y=1, figure=None, **kwargs):
-        super().__init__(base_type='ExposedView', **kwargs)
+        super().__init__(**kwargs)
         if figure is None:
             self.__figure = plt.figure()
         else:
@@ -17,11 +18,6 @@ class Plot(DICEObject):
         self.__figure.set_dpi(100)
         self.__size_x = size_x
         self.__size_y = size_y
-        self.__frame = None
-        with NamedTemporaryFile(buffering=0) as f:
-            f.write(b'\x00')
-            if self.mmap(f.name):
-                self.__frame = mmap.mmap(f.fileno(), 0)
 
     @property
     def figure(self):
@@ -47,13 +43,8 @@ class Plot(DICEObject):
         # assert size == (int(self.__size_x), int(self.__size_y)), '{} {} {}'.format(size, self.__size_x, self.__size_y)
         # assert len(data) == self.__size_x*self.__size_y*4
 
-        if self.__frame is not None:
-            if len(self.__frame) != size[0]*size[1]*4:
-                self.__frame.resize(size[0]*size[1]*4)
-            self.__frame[:] = data
-            self.update(size[0], size[1], False)
-        else:
-            self.update(size[0], size[1], False, lz4.block.compress(data))
+        self.update(size[0], size[1], False, data)
+
 
     def size_changed(self, size_x, size_y):
         """
