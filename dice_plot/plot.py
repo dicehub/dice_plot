@@ -6,6 +6,8 @@ import lz4
 from tempfile import NamedTemporaryFile
 import mmap
 from dice_tools.helpers.xview import View
+from dice_tools import *
+
 
 class Plot(View):
 
@@ -32,7 +34,6 @@ class Plot(View):
         if self.__figure is None or \
                 self.__size_x == 0 or self.__size_y == 0:
             return
-            
         dpi = float(self.__figure.get_dpi())
         width = self.__size_x/dpi
         height = self.__size_y/dpi
@@ -44,7 +45,6 @@ class Plot(View):
         # assert len(data) == self.__size_x*self.__size_y*4
 
         self.update(size[0], size[1], False, data)
-
 
     def size_changed(self, size_x, size_y):
         """
@@ -70,7 +70,6 @@ class Plot(View):
         :param y: Y coordinate of position where mouse pressed.
         :param modifiers: Keyboard modifiers, i.e. 'Alt', 'Control', 'Shift'.
         """
-
 
     def mouse_release(self, btn, x, y, modifiers):
         """
