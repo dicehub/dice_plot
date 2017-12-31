@@ -16,6 +16,7 @@ setup(
     packages = find_packages(),
     install_requires=[
         'dice_tools',
-        'matplotlib'
+        'matplotlib',
+        'lz4'
         ],
 )
